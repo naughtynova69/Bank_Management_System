@@ -1,0 +1,55 @@
+{% extends 'bankapp/base.html' %}
+
+{% block title %}Close Account - {{ account.account_number }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h2 class="mb-0"><i class="bi bi-x-circle"></i> Close Account</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i> <strong>Warning!</strong> This action cannot be undone.
+                </div>
+                
+                <div class="mb-4">
+                    <p><strong>Account Number:</strong> {{ account.account_number }}</p>
+                    <p><strong>Account Holder:</strong> {{ account.account_holder }}</p>
+                    <p><strong>Current Balance:</strong> <span class="text-success">${{ account.balance|floatformat:2 }}</span></p>
+                    <p><strong>Status:</strong> 
+                        {% if account.is_active %}
+                            <span class="badge bg-success">Active</span>
+                        {% else %}
+                            <span class="badge bg-danger">Closed</span>
+                        {% endif %}
+                    </p>
+                </div>
+                
+                {% if account.is_active %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2 d-md-flex">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-check-circle"></i> Confirm Close Account
+                            </button>
+                            <a href="{% url 'account_detail' account.account_number %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="alert alert-info">
+                        This account is already closed.
+                    </div>
+                    <a href="{% url 'account_detail' account.account_number %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Account
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

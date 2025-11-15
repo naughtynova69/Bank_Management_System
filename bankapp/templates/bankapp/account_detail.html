@@ -1,0 +1,115 @@
+{% extends 'bankapp/base.html' %}
+
+{% block title %}Account {{ account.account_number }} - Bank Management System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0"><i class="bi bi-person-circle"></i> Account Details</h2>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p><strong>Account Number:</strong> <span class="text-primary">{{ account.account_number }}</span></p>
+                        <p><strong>Account Holder:</strong> {{ account.account_holder }}</p>
+                        <p><strong>Status:</strong> 
+                            {% if account.is_active %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-danger">Closed</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Current Balance:</strong> <span class="text-success" style="font-size: 1.5rem; font-weight: bold;">${{ account.balance|floatformat:2 }}</span></p>
+                        <p><strong>Total Transactions:</strong> {{ account.get_transaction_count }}</p>
+                        <p><strong>Created:</strong> {{ account.created_at|date:"F d, Y" }}</p>
+                    </div>
+                </div>
+                
+                {% if account.is_active %}
+                <div class="d-grid gap-2 d-md-flex">
+                    <a href="{% url 'deposit' account.account_number %}" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> Deposit
+                    </a>
+                    <a href="{% url 'withdraw' account.account_number %}" class="btn btn-warning">
+                        <i class="bi bi-dash-circle"></i> Withdraw
+                    </a>
+                    <a href="{% url 'close_account' account.account_number %}" class="btn btn-danger">
+                        <i class="bi bi-x-circle"></i> Close Account
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-arrow-left"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'account_list' %}" class="btn btn-outline-primary">
+                        <i class="bi bi-list"></i> All Accounts
+                    </a>
+                    <a href="{% url 'transfer' %}" class="btn btn-outline-success">
+                        <i class="bi bi-arrow-left-right"></i> Transfer Money
+                    </a>
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-house"></i> Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="mb-0"><i class="bi bi-clock-history"></i> Transaction History</h3>
+    </div>
+    <div class="card-body">
+        {% if transactions %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Balance After</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in transactions %}
+                        <tr>
+                            <td>{{ transaction.timestamp|date:"M d, Y H:i" }}</td>
+                            <td>
+                                {% if transaction.transaction_type == 'DEPOSIT' or transaction.transaction_type == 'INITIAL' or transaction.transaction_type == 'TRANSFER_IN' %}
+                                    <span class="badge bg-success">{{ transaction.get_transaction_type_display }}</span>
+                                {% elif transaction.transaction_type == 'WITHDRAWAL' or transaction.transaction_type == 'TRANSFER_OUT' %}
+                                    <span class="badge bg-danger">{{ transaction.get_transaction_type_display }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ transaction.get_transaction_type_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td><strong>${{ transaction.amount|floatformat:2 }}</strong></td>
+                            <td>${{ transaction.balance_after|floatformat:2 }}</td>
+                            <td>{{ transaction.description|default:"-" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted text-center py-3">No transactions found for this account.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,54 @@
+{% extends 'bankapp/base.html' %}
+
+{% block title %}Deposit - Account {{ account.account_number }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0"><i class="bi bi-plus-circle"></i> Deposit Money</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>Account:</strong> {{ account.account_number }}<br>
+                    <strong>Holder:</strong> {{ account.account_holder }}<br>
+                    <strong>Current Balance:</strong> <span class="text-success">${{ account.balance|floatformat:2 }}</span>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.amount.id_for_label }}" class="form-label">Deposit Amount *</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            {{ form.amount }}
+                        </div>
+                        {% if form.amount.errors %}
+                            <div class="text-danger">{{ form.amount.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">Description (Optional)</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="text-danger">{{ form.description.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Deposit
+                        </button>
+                        <a href="{% url 'account_detail' account.account_number %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

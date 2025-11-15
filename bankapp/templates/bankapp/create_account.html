@@ -1,0 +1,49 @@
+{% extends 'bankapp/base.html' %}
+
+{% block title %}Create Account - Bank Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0"><i class="bi bi-person-plus"></i> Create New Account</h2>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.account_holder.id_for_label }}" class="form-label">Account Holder Name *</label>
+                        {{ form.account_holder }}
+                        {% if form.account_holder.errors %}
+                            <div class="text-danger">{{ form.account_holder.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.initial_balance.id_for_label }}" class="form-label">Initial Deposit</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            {{ form.initial_balance }}
+                        </div>
+                        {% if form.initial_balance.errors %}
+                            <div class="text-danger">{{ form.initial_balance.errors }}</div>
+                        {% endif %}
+                        <small class="text-muted">Leave as 0 if no initial deposit</small>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Create Account
+                        </button>
+                        <a href="{% url 'account_list' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

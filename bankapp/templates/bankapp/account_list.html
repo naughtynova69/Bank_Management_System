@@ -1,0 +1,71 @@
+{% extends 'bankapp/base.html' %}
+
+{% block title %}All Accounts - Bank Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="mb-0"><i class="bi bi-people"></i> All Accounts</h2>
+        <a href="{% url 'create_account' %}" class="btn btn-light">
+            <i class="bi bi-plus-circle"></i> Create New Account
+        </a>
+    </div>
+    <div class="card-body">
+        {% if accounts %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Account Number</th>
+                            <th>Account Holder</th>
+                            <th>Balance</th>
+                            <th>Status</th>
+                            <th>Transactions</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for account in accounts %}
+                        <tr>
+                            <td><strong>{{ account.account_number }}</strong></td>
+                            <td>{{ account.account_holder }}</td>
+                            <td><strong class="text-success">${{ account.balance|floatformat:2 }}</strong></td>
+                            <td>
+                                {% if account.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Closed</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ account.get_transaction_count }}</td>
+                            <td>
+                                <a href="{% url 'account_detail' account.account_number %}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                                {% if account.is_active %}
+                                    <a href="{% url 'deposit' account.account_number %}" class="btn btn-sm btn-success">
+                                        <i class="bi bi-plus"></i> Deposit
+                                    </a>
+                                    <a href="{% url 'withdraw' account.account_number %}" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-dash"></i> Withdraw
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 4rem; color: #ccc;"></i>
+                <p class="mt-3 text-muted">No accounts found. Create your first account to get started!</p>
+                <a href="{% url 'create_account' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Create Account
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

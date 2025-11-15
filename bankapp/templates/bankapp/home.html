@@ -1,0 +1,97 @@
+{% extends 'bankapp/base.html' %}
+
+{% block title %}Home - Bank Management System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0"><i class="bi bi-speedometer2"></i> Bank Dashboard</h2>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-primary">
+                                <i class="bi bi-people"></i>
+                            </div>
+                            <div class="stat-value">{{ total_accounts }}</div>
+                            <div class="stat-label">Total Accounts</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-success">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                            <div class="stat-value">{{ active_accounts }}</div>
+                            <div class="stat-label">Active Accounts</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-warning">
+                                <i class="bi bi-cash-stack"></i>
+                            </div>
+                            <div class="stat-value">${{ total_deposits|floatformat:2 }}</div>
+                            <div class="stat-label">Total Deposits</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-info">
+                                <i class="bi bi-list-check"></i>
+                            </div>
+                            <div class="stat-value">{{ total_transactions }}</div>
+                            <div class="stat-label">Total Transactions</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-lightning-charge"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'create_account' %}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-plus-circle"></i> Create New Account
+                    </a>
+                    <a href="{% url 'account_list' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-list-ul"></i> View All Accounts
+                    </a>
+                    <a href="{% url 'transfer' %}" class="btn btn-outline-success btn-lg">
+                        <i class="bi bi-arrow-left-right"></i> Transfer Money
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> System Information</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-3">Welcome to the Bank Management System! This system allows you to:</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-check-circle text-success"></i> Create and manage bank accounts</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success"></i> Deposit and withdraw money</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success"></i> Transfer funds between accounts</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success"></i> View transaction history</li>
+                    <li class="mb-2"><i class="bi bi-check-circle text-success"></i> Track account balances</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
